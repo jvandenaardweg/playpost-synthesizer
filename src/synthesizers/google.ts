@@ -27,6 +27,8 @@ export class GoogleSynthesizer extends BaseSynthesizer {
       tempFilesExtension: outputFormat,
     });
 
+    // Require the Text to Speech client here, and not on top of the file to improve startup performance...
+    // ... on requests that do not need Google Text to Speech
     const { TextToSpeechClient } = require('@google-cloud/text-to-speech');
 
     this.client = new TextToSpeechClient();
