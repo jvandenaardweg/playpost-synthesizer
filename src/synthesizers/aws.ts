@@ -1,22 +1,21 @@
-console.log('App init: aws.ts import aws-sdk');
-// import AWS from 'aws-sdk';
 console.log('App init: aws.ts ./index');
 import { BaseSynthesizer, SynthesizeUploadResponse } from './index';
 console.log('App init: aws.ts ../storage/google-cloud-storage');
 import { AvailableBucketName } from '../storage/google-cloud-storage';
 console.log('App init: aws.ts ../utils/ssml');
 import { AWS_CHARACTER_SOFT_LIMIT, AWS_CHARACTER_HARD_LIMIT } from '../utils/ssml';
-import { Polly } from 'aws-sdk';
+console.log('App init: aws.ts aws-sdk/clients/polly');
+import AWSPolly from 'aws-sdk/clients/polly';
 
 export interface SynthesizeOptionsAWS {
   ssml: string;
-  audioEncoding: Polly.SynthesizeSpeechInput['OutputFormat'];
-  voiceLanguageCode: Polly.SynthesizeSpeechInput['LanguageCode'];
-  voiceName: Polly.SynthesizeSpeechInput['VoiceId'];
+  audioEncoding: AWSPolly.SynthesizeSpeechInput['OutputFormat'];
+  voiceLanguageCode: AWSPolly.SynthesizeSpeechInput['LanguageCode'];
+  voiceName: AWSPolly.SynthesizeSpeechInput['VoiceId'];
 }
 
 export class AWSSynthesizer extends BaseSynthesizer {
-  private readonly client: AWS.Polly;
+  private readonly client: AWSPolly;
   private readonly options: SynthesizeOptionsAWS;
 
   constructor(options: SynthesizeOptionsAWS) {
@@ -30,7 +29,7 @@ export class AWSSynthesizer extends BaseSynthesizer {
     // AWS_SECRET_ACCESS_KEY
     // AWS_USER
 
-    this.client = new Polly({
+    this.client = new AWSPolly({
       signatureVersion: 'v4',
       region: 'eu-west-1'
     });
@@ -40,9 +39,9 @@ export class AWSSynthesizer extends BaseSynthesizer {
     console.log('Synthesizer options:', JSON.stringify(this.options));
   }
 
-  public synthesize = async (options: SynthesizeOptionsAWS): Promise<AWS.Polly.SynthesizeSpeechOutput> => {
+  public synthesize = async (options: SynthesizeOptionsAWS): Promise<AWSPolly.SynthesizeSpeechOutput> => {
     return new Promise((resolve, reject) => {
-      const speechRequestOptions: AWS.Polly.SynthesizeSpeechInput = {
+      const speechRequestOptions: AWSPolly.SynthesizeSpeechInput = {
         OutputFormat: options.audioEncoding,
         Text: options.ssml,
         VoiceId: options.voiceName,

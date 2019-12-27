@@ -1,4 +1,3 @@
-console.log('App init: google.ts @google-cloud/text-to-speech');
 console.log('App init: google.ts @google-cloud/text-to-speech/build/protos/protos');
 import { google } from '@google-cloud/text-to-speech/build/protos/protos';
 console.log('App init: google.ts ../storage/google-cloud-storage');
@@ -26,9 +25,9 @@ export class GoogleSynthesizer extends BaseSynthesizer {
       GOOGLE_CHARACTER_SOFT_LIMIT,
     );
 
-    const { v1 } = require('@google-cloud/text-to-speech');
+    const { TextToSpeechClient } = require('@google-cloud/text-to-speech/build/protos/google/cloud/texttospeech/v1');
 
-    this.client = new v1.TextToSpeechClient();
+    this.client = new TextToSpeechClient();
     this.options = options;
 
     console.log('Synthesizer options:', JSON.stringify(this.options));
