@@ -42,9 +42,13 @@ export const setupServer = async () => {
   app.use(Sentry.Handlers.requestHandler() as express.RequestHandler);
   app.use(Sentry.Handlers.errorHandler() as express.ErrorRequestHandler);
 
+  console.log('App init: Importing controllers...');
+
   const synthesizerController = new SynthesizerController();
   const healthController = new HealthController();
   const statusController = new StatusController();
+
+  console.log('App init: Controllers imported!');
 
   // Make express allow JSON payload bodies
   // https://medium.com/@nodepractices/were-under-attack-23-node-js-security-best-practices-e33c146cb87d#cb8f
