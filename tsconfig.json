@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "baseUrl": "/",
+    "importHelpers": true,
+    "emitDecoratorMetadata": true, // typeOrm requirement
+    "experimentalDecorators": true, // typeOrm requirement
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": false,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "declaration": true,
+    "stripInternal": true,
+    "strictNullChecks": true,
+    "downlevelIteration": true,
+    "lib": ["es5", "es6"], // es6 = typeOrm requirement
+    "moduleResolution": "node",
+    "noEmit": true,
+    "outDir": "dist",
+    "target": "es6",
+    "module": "commonjs",
+    "removeComments": true,
+    "incremental": true,
+    "skipLibCheck": true, // Fix conflict with node types: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/16825
+    "plugins": [
+      { "name": "typescript-tslint-plugin" }
+    ],
+    "types": ["node", "jest"],
+    "paths": {
+      "*": ["src/typings/*"]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": ["node_modules", "babel.config.js", "src/**/*.test.ts"]
+}
