@@ -1,6 +1,10 @@
+console.log('App init: import aws-sdk');
 import AWS from 'aws-sdk';
+console.log('App init: ./index');
 import { BaseSynthesizer, SynthesizeOptionsAWS, SynthesizeUploadResponse } from './index';
+console.log('App init: import ../storage/google-cloud-storage');
 import { AvailableBucketName } from '../storage/google-cloud-storage';
+console.log('App init: import ../utils/ssml');
 import { AWS_CHARACTER_SOFT_LIMIT, AWS_CHARACTER_HARD_LIMIT } from '../utils/ssml';
 
 export class AWSSynthesizer extends BaseSynthesizer {
