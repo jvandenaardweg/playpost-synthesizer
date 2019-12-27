@@ -4,12 +4,10 @@ console.log('App init: index.ts import fs');
 import fs from 'fs';
 console.log('App init: index.ts import os');
 import os from 'os';
-console.log('App init: index.ts import music-metadata');
-import { IAudioMetadata } from 'music-metadata';
 console.log('App init: index.ts import ../utils/ssml');
 import { getSSMLParts } from '../utils/ssml';
 console.log('App init: index.ts import ../utils/audio');
-import { concatAudioFiles, getAudiofileMetadata } from '../utils/audio';
+import { concatAudioFiles } from '../utils/audio';
 console.log('App init: index.ts import ../storage/google-cloud-storage');
 import { AvailableBucketName, GoogleCloudStorage } from '../storage/google-cloud-storage';
 
@@ -20,7 +18,6 @@ export interface SynthesizeUploadResponse {
   fileMetaData: any;
   publicFileUrl: string;
   durationInSeconds: number;
-  audiofileMetadata: IAudioMetadata
 }
 
 export interface SynthesizerBaseOptions {
@@ -61,8 +58,10 @@ export class BaseSynthesizer {
     });
   }
 
-  public getAudiofileMetadata = (concatinatedAudiofilePath: string) => {
-    return getAudiofileMetadata(concatinatedAudiofilePath)
+  public getAudiofileDurationInSeconds = (filePath: string): number => {
+    const { getAudioDurationInSeconds } = require('get-audio-duration')
+
+    return getAudioDurationInSeconds(filePath);
   }
 
   // string | Uint8Array | Buffer | Blob | internal.Readable | undefined

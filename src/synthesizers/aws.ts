@@ -107,14 +107,10 @@ export class AWSSynthesizer extends BaseSynthesizer {
       console.log('Uploading...');
 
       // Run these 2 in parallel, is faster
-      const [audiofileMetadata, uploadResponse] = await Promise.all([
-        this.getAudiofileMetadata(concatinatedAudiofilePath),
+      const [durationInSeconds, uploadResponse] = await Promise.all([
+        this.getAudiofileDurationInSeconds(concatinatedAudiofilePath),
         this.uploadToStorage(bucketName, concatinatedAudiofilePath, bucketUploadDestination)
       ]);
-
-      console.log('audiofileMetadata: ', JSON.stringify(audiofileMetadata));
-
-      const durationInSeconds = audiofileMetadata.format.duration || 0;
 
       console.log('durationInSeconds: ', durationInSeconds);
       console.log('uploadResponse:', JSON.stringify(uploadResponse));
@@ -125,7 +121,6 @@ export class AWSSynthesizer extends BaseSynthesizer {
       return {
         fileMetaData: uploadResponse.fileMetaData,
         publicFileUrl: uploadResponse.publicFileUrl,
-        audiofileMetadata,
         durationInSeconds
       };
     } catch (err) {

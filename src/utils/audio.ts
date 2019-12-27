@@ -1,20 +1,8 @@
 console.log('App init: audio.ts import fluent-ffmpeg');
 import fluentFfmpeg from 'fluent-ffmpeg';
-console.log('App init: audio.ts import music-metadata');
-import { parseFile, IAudioMetadata } from 'music-metadata';
 console.log('App init: audio.ts import ffmpeg-static');
 import ffmpegStatic from 'ffmpeg-static';
 import { AllowedOutputFileExtension, AllowedTempFilesExtension } from '../synthesizers';
-
-export const getAudiofileMetadata = async (audioFilePath: string): Promise<IAudioMetadata> => {
-  try {
-    const metaData = await parseFile(audioFilePath, { duration: true });
-    return metaData;
-  } catch (err) {
-    console.log('Audio Util (Duration): Failed to get audiofile duration.', audioFilePath);
-    throw err;
-  }
-};
 
 /**
  * Concatinates multiple audiofiles into 1 audiofile
@@ -75,7 +63,7 @@ export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string
       .addInputOptions(ffmpegOptions.inputOptions)
       .addOutputOptions(ffmpegOptions.outputOptions)
       .save(ffmpegOptions.save)
-      .on('error', (err: any) => {
+      .on('error', err => {
         console.error('Audio Util (Concat): Concat failed using ffmpeg:', JSON.stringify(err));
         reject(err);
       })
@@ -87,7 +75,7 @@ export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string
         console.log(`Audio Util (Concat): Execution time: ${ds} ${dms}ms`);
         resolve(outputPath);
       })
-      .on('codecData', (data: any) => {
+      .on('codecData', data => {
         console.log('Audio Util (Concat): Data:', JSON.stringify(data));
       });
   });

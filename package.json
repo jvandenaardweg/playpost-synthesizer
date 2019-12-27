@@ -42,8 +42,8 @@
     "express": "^4.17.1",
     "ffmpeg-static": "^2.7.0",
     "fluent-ffmpeg": "^2.1.2",
+    "get-audio-duration": "^1.0.0",
     "md5": "^2.2.1",
-    "music-metadata": "^5.4.1",
     "polly-ssml-split": "^0.1.0"
   },
   "devDependencies": {

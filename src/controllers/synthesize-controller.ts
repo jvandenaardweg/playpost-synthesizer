@@ -6,8 +6,6 @@ import { AvailableBucketName } from '../storage/google-cloud-storage';
 import { AllowedOutputFileExtension } from '../synthesizers';
 
 interface RequestBody {
-  action: 'upload' | 'preview',
-  synthesizerName: 'google' | 'aws',
   voiceSsmlGender: 'FEMALE' | 'MALE',
   outputFormat: AllowedOutputFileExtension;
   voiceName: string;
@@ -17,11 +15,16 @@ interface RequestBody {
   bucketUploadDestination: string;
 }
 
+interface RequestParams {
+  action: 'upload' | 'preview';
+  synthesizerName: 'google' | 'aws';
+}
+
 export class SynthesizerController {
   public synthesize = async (req: Request, res: Response) => {
     const authorization = req.header('Authorization');
-    const { synthesizerName } = req.params;
-    const { action, voiceSsmlGender, voiceName, voiceLanguageCode, ssml, bucketName, bucketUploadDestination, outputFormat } = req.body as RequestBody;
+    const { synthesizerName, action } = req.params as unknown as RequestParams;
+    const { voiceSsmlGender, voiceName, voiceLanguageCode, ssml, bucketName, bucketUploadDestination, outputFormat } = req.body as RequestBody;
 
     console.log('req.body', JSON.stringify(req.body));
 
