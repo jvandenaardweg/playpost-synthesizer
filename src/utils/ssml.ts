@@ -1,4 +1,4 @@
-import * as pollySsmlSplit from 'polly-ssml-split';
+import pollySsmlSplit from 'polly-ssml-split';
 
 export const GOOGLE_CHARACTER_FINAL_LIMIT = 5000;
 export const GOOGLE_CHARACTER_HARD_LIMIT = 4500; // just below google's api limit of 5000

@@ -1,4 +1,4 @@
-import * as AWS from 'aws-sdk';
+import AWS from 'aws-sdk';
 import { BaseSynthesizer, SynthesizeOptionsAWS, SynthesizeUploadResponse } from './index';
 import { AvailableBucketName } from '../storage/google-cloud-storage';
 import { AWS_CHARACTER_SOFT_LIMIT, AWS_CHARACTER_HARD_LIMIT } from '../utils/ssml';
