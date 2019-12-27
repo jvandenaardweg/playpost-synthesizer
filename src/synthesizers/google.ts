@@ -99,7 +99,7 @@ export class GoogleSynthesizer extends BaseSynthesizer {
       const tempFiles = await Promise.all(saveTempFiles);
       console.log('tempFiles: ', JSON.stringify(tempFiles));
 
-      const concatinatedAudiofilePath = await this.getConcatinatedAudiofilePath(tempFiles, this.fileExtension, this.outputFormat);
+      const concatinatedAudiofilePath = await this.getConcatinatedAudiofilePath(tempFiles, this.tempFilesExtension, this.outputFormat);
       console.log('concatinatedAudiofilePath: ', concatinatedAudiofilePath);
 
       console.log('Uploading...');
