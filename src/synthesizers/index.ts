@@ -1,44 +1,23 @@
 console.log('App init: index.ts import md5');
 import md5 from 'md5';
-console.log('App init: index.ts import rimraf');
-import rimraf from 'rimraf';
 console.log('App init: index.ts import fs');
 import fs from 'fs';
 console.log('App init: index.ts import os');
 import os from 'os';
 console.log('App init: index.ts import music-metadata');
-import musicMetadata from 'music-metadata';
+import { IAudioMetadata } from 'music-metadata';
 console.log('App init: index.ts import ../utils/ssml');
 import { getSSMLParts } from '../utils/ssml';
 console.log('App init: index.ts import ../utils/audio');
 import { getAudioFileDurationInSeconds, concatAudioFiles, getAudiofileMetadata } from '../utils/audio';
 console.log('App init: index.ts import ../storage/google-cloud-storage');
 import { AvailableBucketName, GoogleCloudStorage } from '../storage/google-cloud-storage';
-console.log('App init: index.ts import @google-cloud/text-to-speech/build/protos/protos');
-import { google } from '@google-cloud/text-to-speech/build/protos/protos';
-console.log('App init: index.ts import aws-sdk');
-import { Polly } from 'aws-sdk';
-
-export interface SynthesizeOptionsGoogle {
-  ssml: string;
-  audioEncoding: google.cloud.texttospeech.v1.AudioEncoding;
-  voiceLanguageCode: string;
-  voiceName: string;
-  voiceSsmlGender: google.cloud.texttospeech.v1.SsmlVoiceGender;
-}
-
-export interface SynthesizeOptionsAWS {
-  ssml: string;
-  audioEncoding: Polly.SynthesizeSpeechInput['OutputFormat'];
-  voiceLanguageCode: Polly.SynthesizeSpeechInput['LanguageCode'];
-  voiceName: Polly.SynthesizeSpeechInput['VoiceId'];
-}
 
 export interface SynthesizeUploadResponse {
   fileMetaData: any;
   publicFileUrl: string;
   durationInSeconds: number;
-  audiofileMetadata: musicMetadata.IAudioMetadata
+  audiofileMetadata: IAudioMetadata
 }
 
 export class BaseSynthesizer {
@@ -100,7 +79,8 @@ export class BaseSynthesizer {
 
   public removeDir = (dir: string) => {
     return new Promise((resolve, reject) => {
-      rimraf(dir, (err) => {
+      // Important: rmdir { recurisve: true } requires node 12.10.0 or higher
+      fs.rmdir(dir, { recursive: true }, (err) => {
         if (err) {
           console.error('Failed to remove dir:', dir, JSON.stringify(err));
           reject(err);

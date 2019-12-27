@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 import { Sentry } from '../sentry';
 
-console.log('App init: synthesize-controller.ts ../synthesizers/google');
-import { GoogleSynthesizer } from '../synthesizers/google';
-console.log('App init: synthesize-controller.ts ../synthesizers/aws');
-import { AWSSynthesizer } from '../synthesizers/aws';
 console.log('App init: synthesize-controller.ts ../storage/google-cloud-storage');
 import { AvailableBucketName } from '../storage/google-cloud-storage';
 
@@ -75,22 +71,29 @@ export class SynthesizerController {
       return res.status(400).json({ message });
     }
 
+    let synthesizer: any;
+
     // Create the correct synthesizer class with the correct options
-    const synthesizer =
-      synthesizerName === 'google'
-      ? new GoogleSynthesizer({
+    if (synthesizerName === 'google') {
+      const { GoogleSynthesizer } = require('../synthesizers/google');
+
+      synthesizer = new GoogleSynthesizer({
         audioEncoding: 2, // MP3
         ssml,
         voiceLanguageCode,
         voiceName,
         voiceSsmlGender: (voiceSsmlGender === 'MALE') ? 1 : (voiceSsmlGender === 'FEMALE') ? 2 : 0
-      })
-      : new AWSSynthesizer({
+      });
+    } else {
+      const { AWSSynthesizer } = require('../synthesizers/aws');
+
+      synthesizer = new AWSSynthesizer({
         audioEncoding: 'mp3',
         ssml,
         voiceLanguageCode,
         voiceName
       });
+    }
 
     // Just return the audiocontents to stream
     if (action === 'preview') {

@@ -4,9 +4,17 @@ import { google } from '@google-cloud/text-to-speech/build/protos/protos';
 console.log('App init: google.ts ../storage/google-cloud-storage');
 import { AvailableBucketName } from '../storage/google-cloud-storage';
 console.log('App init: google.ts ./index');
-import { BaseSynthesizer, SynthesizeOptionsGoogle, SynthesizeUploadResponse } from './index';
+import { BaseSynthesizer, SynthesizeUploadResponse } from './index';
 console.log('App init: google.ts ../utils/ssml');
 import { GOOGLE_CHARACTER_HARD_LIMIT, GOOGLE_CHARACTER_SOFT_LIMIT } from '../utils/ssml';
+
+export interface SynthesizeOptionsGoogle {
+  ssml: string;
+  audioEncoding: google.cloud.texttospeech.v1.AudioEncoding;
+  voiceLanguageCode: string;
+  voiceName: string;
+  voiceSsmlGender: google.cloud.texttospeech.v1.SsmlVoiceGender;
+}
 
 export class GoogleSynthesizer extends BaseSynthesizer {
   private readonly client: any;

@@ -1,11 +1,19 @@
 console.log('App init: aws.ts import aws-sdk');
 // import AWS from 'aws-sdk';
 console.log('App init: aws.ts ./index');
-import { BaseSynthesizer, SynthesizeOptionsAWS, SynthesizeUploadResponse } from './index';
+import { BaseSynthesizer, SynthesizeUploadResponse } from './index';
 console.log('App init: aws.ts ../storage/google-cloud-storage');
 import { AvailableBucketName } from '../storage/google-cloud-storage';
 console.log('App init: aws.ts ../utils/ssml');
 import { AWS_CHARACTER_SOFT_LIMIT, AWS_CHARACTER_HARD_LIMIT } from '../utils/ssml';
+import { Polly } from 'aws-sdk';
+
+export interface SynthesizeOptionsAWS {
+  ssml: string;
+  audioEncoding: Polly.SynthesizeSpeechInput['OutputFormat'];
+  voiceLanguageCode: Polly.SynthesizeSpeechInput['LanguageCode'];
+  voiceName: Polly.SynthesizeSpeechInput['VoiceId'];
+}
 
 export class AWSSynthesizer extends BaseSynthesizer {
   private readonly client: AWS.Polly;
@@ -21,9 +29,6 @@ export class AWSSynthesizer extends BaseSynthesizer {
     // AWS_ACCESS_KEY_ID
     // AWS_SECRET_ACCESS_KEY
     // AWS_USER
-
-    // Require here, so we got faster startup time for requests that do not need AWS
-    const { Polly } = require('aws-sdk');
 
     this.client = new Polly({
       signatureVersion: 'v4',
