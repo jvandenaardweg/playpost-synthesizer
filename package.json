@@ -2,7 +2,7 @@
   "name": "playpost-synthesizer",
   "main": "dist/index.js",
   "private": true,
-  "version": "1.0.27",
+  "version": "1.0.28",
   "engines": {
     "node": "12.14.0"
   },
