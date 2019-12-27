@@ -1,3 +1,4 @@
+console.time('Startup Time');
 console.log('App init: Start!');
 
 // tslint:disable-next-line
@@ -19,6 +20,7 @@ async function bootstrap() {
     return Sentry.captureException(err);
   } finally {
     console.log('App init: Complete!');
+    console.timeEnd('Startup Time');
   }
 
 }
