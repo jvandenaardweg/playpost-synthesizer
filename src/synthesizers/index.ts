@@ -13,6 +13,9 @@ import { getAudioFileDurationInSeconds, concatAudioFiles, getAudiofileMetadata }
 console.log('App init: index.ts import ../storage/google-cloud-storage');
 import { AvailableBucketName, GoogleCloudStorage } from '../storage/google-cloud-storage';
 
+export type AllowedInputFileExtensions = 'mp3' | 'wav' | 'pcm';
+export type AllowedOutputFileExtensions = 'mp3' | 'wav';
+
 export interface SynthesizeUploadResponse {
   fileMetaData: any;
   publicFileUrl: string;
@@ -22,14 +25,14 @@ export interface SynthesizeUploadResponse {
 
 export class BaseSynthesizer {
   readonly sessionId: string;
-  readonly fileExtension: string;
+  readonly fileExtension: AllowedInputFileExtensions;
   readonly tempBaseDir: string;
   readonly characterLimitSoft: number;
   readonly characterLimitHard: number;
 
-  constructor(characterLimitHard: number, characterLimitSoft: number) {
+  constructor(characterLimitHard: number, characterLimitSoft: number, fileExtension: AllowedInputFileExtensions) {
     this.sessionId = md5((new Date().getTime() * 10000).toString());
-    this.fileExtension = 'mp3';
+    this.fileExtension = fileExtension;
     this.tempBaseDir =`${os.tmpdir()}/${this.sessionId}`;
     this.characterLimitHard = characterLimitHard;
     this.characterLimitSoft = characterLimitSoft;
@@ -97,7 +100,7 @@ export class BaseSynthesizer {
     return googleCloudStorage.upload(concatinatedAudiofilePath, bucketUploadDestination)
   }
 
-  public getConcatinatedAudiofilePath = (tempFiles: string[]) => {
-    return concatAudioFiles(tempFiles, this.tempBaseDir);
+  public getConcatinatedAudiofilePath = (tempFiles: string[], inputFormat: AllowedInputFileExtensions, outputFormat: AllowedOutputFileExtensions) => {
+    return concatAudioFiles(tempFiles, this.tempBaseDir, inputFormat, outputFormat);
   }
 }

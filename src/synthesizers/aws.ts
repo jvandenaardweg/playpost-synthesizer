@@ -17,11 +17,13 @@ export interface SynthesizeOptionsAWS {
 export class AWSSynthesizer extends BaseSynthesizer {
   private readonly client: AWSPolly;
   private readonly options: SynthesizeOptionsAWS;
+  private readonly outputFormat: 'mp3' | 'wav';
 
-  constructor(options: SynthesizeOptionsAWS) {
+  constructor(outputFormat: 'mp3' | 'wav', options: SynthesizeOptionsAWS) {
     super(
       AWS_CHARACTER_HARD_LIMIT,
-      AWS_CHARACTER_SOFT_LIMIT
+      AWS_CHARACTER_SOFT_LIMIT,
+      outputFormat === 'wav' ? 'pcm' : 'mp3'
     );
 
     // Required environment variables:
@@ -35,6 +37,7 @@ export class AWSSynthesizer extends BaseSynthesizer {
     });
 
     this.options = options;
+    this.outputFormat = outputFormat;
 
     console.log('Synthesizer options:', JSON.stringify(this.options));
   }
@@ -98,7 +101,9 @@ export class AWSSynthesizer extends BaseSynthesizer {
       const tempFiles = await Promise.all(saveTempFiles);
       console.log('tempFiles: ', JSON.stringify(tempFiles));
 
-      const concatinatedAudiofilePath = await this.getConcatinatedAudiofilePath(tempFiles);
+      // const inputFormat = this.fileExtension === 'wav' ? 'pcm' : 'mp3';
+
+      const concatinatedAudiofilePath = await this.getConcatinatedAudiofilePath(tempFiles, this.fileExtension, this.outputFormat);
       console.log('concatinatedAudiofilePath: ', concatinatedAudiofilePath);
 
       console.log('Uploading...');

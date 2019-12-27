@@ -35,17 +35,33 @@ export const getAudioFileDurationInSeconds = async (audioFilePath: string): Prom
 /**
  * Concatinates multiple audiofiles into 1 audiofile
  */
-export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string): Promise<string> => {
+export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string, inputFormat: 'mp3' | 'pcm' | 'wav', outputFormat: 'mp3' | 'wav'): Promise<string> => {
   return new Promise((resolve, reject) => {
     fluentFfmpeg.setFfmpegPath(ffmpegStatic.path);
 
     const hrstart = process.hrtime();
 
+    console.log(`Audio Util (Concat):`, audioFiles, tempBaseDir, inputFormat, outputFormat);
     console.log(`Audio Util (Concat): Combining ${audioFiles.length} audiofiles to one audio file...`);
 
-    const audioCodec = 'libmp3lame';
-    const format = 'mp3';
-    const outputPath = `${tempBaseDir}/concatinated.mp3`;
+
+    const ffmpegInputOptions: string[] = [];
+    const ffmpegInput = `concat:${audioFiles.join('|')}`;
+    const outputPath = `${tempBaseDir}/concatinated.${outputFormat}`;
+
+    // if (outputFormat === 'mp3') {
+    //   // audioCodec = 'libmp3lame';
+    // }
+
+    if (inputFormat === 'pcm') {
+      // pcm to wav:
+      // ffmpeg -f s16le -ar 16k -ac 1 -i "concat:file-0.pcm|file-1.pcm" output.wav
+
+      // audioCodec = 'pcm_s16le';
+      ffmpegInputOptions.push('-f s16le');
+      ffmpegInputOptions.push('-ar 16k');
+      ffmpegInputOptions.push('-ac 1');
+    }
 
     if (!audioFiles.length) {
       const errorMessage = 'No audiofiles given to concat.';
@@ -53,12 +69,20 @@ export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string
       reject(new Error(errorMessage));
     }
 
+    const ffmpegOptions = {
+      outputFormat,
+      input: ffmpegInput,
+      inputOptions: ffmpegInputOptions,
+      save: outputPath
+    }
+
+    console.log('Run fluent ffmpeg with: ', JSON.stringify(ffmpegOptions));
+
     return fluentFfmpeg()
-      .format(format)
-      .audioCodec(audioCodec)
-      .input(`concat:${audioFiles.join('|')}`)
-      .outputOptions('-acodec copy')
-      .save(outputPath)
+      .input(ffmpegOptions.input)
+      .outputFormat(ffmpegOptions.outputFormat)
+      .addInputOptions(ffmpegOptions.inputOptions)
+      .save(ffmpegOptions.save)
       .on('error', (err: any) => {
         console.error('Audio Util (Concat): Concat failed using ffmpeg:', JSON.stringify(err));
         reject(err);

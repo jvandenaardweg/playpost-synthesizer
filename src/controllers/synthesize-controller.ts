@@ -8,6 +8,7 @@ interface RequestBody {
   action: 'upload' | 'preview',
   synthesizerName: 'google' | 'aws',
   voiceSsmlGender: 'FEMALE' | 'MALE',
+  outputFormat: 'mp3' | 'wav';
   voiceName: string;
   voiceLanguageCode: string;
   ssml: string;
@@ -19,7 +20,7 @@ export class SynthesizerController {
   public synthesize = async (req: Request, res: Response) => {
     const authorization = req.header('Authorization');
     const { synthesizerName } = req.params;
-    const { action, voiceSsmlGender, voiceName, voiceLanguageCode, ssml, bucketName, bucketUploadDestination } = req.body as RequestBody;
+    const { action, voiceSsmlGender, voiceName, voiceLanguageCode, ssml, bucketName, bucketUploadDestination, outputFormat } = req.body as RequestBody;
 
     console.log('req.body', JSON.stringify(req.body));
 
@@ -37,6 +38,12 @@ export class SynthesizerController {
 
     if (!['google', 'aws'].includes(synthesizerName)) {
       const message = '"synthesizerName" must be "google" or "aws".';
+      Sentry.captureMessage(message, Sentry.Severity.Log);
+      return res.status(400).json({ message });
+    }
+
+    if (!['mp3', 'wav'].includes(outputFormat)) {
+      const message = '"outputFormat" must be "mp3" or "wav".';
       Sentry.captureMessage(message, Sentry.Severity.Log);
       return res.status(400).json({ message });
     }
@@ -77,22 +84,32 @@ export class SynthesizerController {
     if (synthesizerName === 'google') {
       const { GoogleSynthesizer } = require('../synthesizers/google');
 
-      synthesizer = new GoogleSynthesizer({
-        audioEncoding: 2, // MP3
-        ssml,
-        voiceLanguageCode,
-        voiceName,
-        voiceSsmlGender: (voiceSsmlGender === 'MALE') ? 1 : (voiceSsmlGender === 'FEMALE') ? 2 : 0
-      });
+      const audioEncoding = outputFormat === 'wav' ? 1 : 2; // 2 = MP3, 1 = LINEAR16
+
+      synthesizer = new GoogleSynthesizer(
+        outputFormat,
+        {
+          audioEncoding,
+          ssml,
+          voiceLanguageCode,
+          voiceName,
+          voiceSsmlGender: (voiceSsmlGender === 'MALE') ? 1 : (voiceSsmlGender === 'FEMALE') ? 2 : 0
+        }
+      );
     } else {
       const { AWSSynthesizer } = require('../synthesizers/aws');
 
-      synthesizer = new AWSSynthesizer({
-        audioEncoding: 'mp3',
-        ssml,
-        voiceLanguageCode,
-        voiceName
-      });
+      const audioEncoding = outputFormat === 'wav' ? 'pcm' : 'mp3';
+
+      synthesizer = new AWSSynthesizer(
+        outputFormat,
+        {
+          audioEncoding,
+          ssml,
+          voiceLanguageCode,
+          voiceName
+        }
+      );
     }
 
     // Just return the audiocontents to stream

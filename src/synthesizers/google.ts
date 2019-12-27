@@ -19,13 +19,14 @@ export class GoogleSynthesizer extends BaseSynthesizer {
   private readonly client: any;
   private readonly options: SynthesizeOptionsGoogle;
 
-  constructor(options: SynthesizeOptionsGoogle) {
+  constructor(fileExtension: 'mp3' | 'wav', options: SynthesizeOptionsGoogle) {
     super(
       GOOGLE_CHARACTER_HARD_LIMIT,
       GOOGLE_CHARACTER_SOFT_LIMIT,
+      fileExtension
     );
 
-    const { TextToSpeechClient } = require('@google-cloud/text-to-speech/build/protos/google/cloud/texttospeech/v1');
+    const { TextToSpeechClient } = require('@google-cloud/text-to-speech');
 
     this.client = new TextToSpeechClient();
     this.options = options;
