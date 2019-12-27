@@ -1,5 +1,5 @@
 {
-  "name": "functions",
+  "name": "playpost-synthesizer",
   "scripts": {
     "dev": "npm run debug",
     "debug": "PORT=3001 ts-node-dev -r dotenv/config --inspect --respawn --transpileOnly ./src/index.ts",
@@ -21,7 +21,7 @@
     "testrunner": "ts-node-dev ./tests/e2e/runner.ts"
   },
   "engines": {
-    "node": "12"
+    "node": "12.14.0"
   },
   "main": "dist/index.js",
   "dependencies": {

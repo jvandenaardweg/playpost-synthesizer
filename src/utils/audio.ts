@@ -46,12 +46,15 @@ export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string
 
 
     const ffmpegInputOptions: string[] = [];
+    const ffmpegOutputOptions: string[] = [];
     const ffmpegInput = `concat:${audioFiles.join('|')}`;
     const outputPath = `${tempBaseDir}/concatinated.${outputFormat}`;
 
-    // if (outputFormat === 'mp3') {
-    //   // audioCodec = 'libmp3lame';
-    // }
+    if (outputFormat === 'mp3') {
+      // Adding this makes concatinating go way faster
+      // Without this options, a concatination of 300ms took 10 seconds
+      ffmpegOutputOptions.push('-acodec copy');
+    }
 
     if (inputFormat === 'pcm') {
       // pcm to wav:
@@ -76,6 +79,7 @@ export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string
       outputFormat,
       input: ffmpegInput,
       inputOptions: ffmpegInputOptions,
+      outputOptions: ffmpegOutputOptions,
       save: outputPath
     }
 
@@ -85,6 +89,7 @@ export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string
       .input(ffmpegOptions.input)
       .outputFormat(ffmpegOptions.outputFormat)
       .addInputOptions(ffmpegOptions.inputOptions)
+      .addOutputOptions(ffmpegOptions.outputOptions)
       .save(ffmpegOptions.save)
       .on('error', (err: any) => {
         console.error('Audio Util (Concat): Concat failed using ffmpeg:', JSON.stringify(err));
