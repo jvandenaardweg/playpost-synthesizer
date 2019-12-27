@@ -1,7 +1,6 @@
 // tslint:disable-next-line
 const { version } = require('../package.json');
 
-import bodyParser from 'body-parser';
 import express, { NextFunction, Request, Response } from 'express';
 
 import { Sentry } from './sentry';
@@ -53,10 +52,7 @@ export const setupServer = async () => {
 
   console.log('App init: Controllers imported!');
 
-  // Make express allow JSON payload bodies
-  // https://medium.com/@nodepractices/were-under-attack-23-node-js-security-best-practices-e33c146cb87d#cb8f
-  app.use(bodyParser.json()); // We upped the limit because an Apple receipt string is a bit large
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.json());
 
   app.post('/v1/synthesize/:synthesizerName', synthesizerController.synthesize);
 

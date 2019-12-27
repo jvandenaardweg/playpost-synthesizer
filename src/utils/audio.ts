@@ -1,13 +1,13 @@
 console.log('App init: audio.ts import fluent-ffmpeg');
 import fluentFfmpeg from 'fluent-ffmpeg';
 console.log('App init: audio.ts import music-metadata');
-import * as musicMetadata from 'music-metadata';
+import { parseFile, IAudioMetadata } from 'music-metadata';
 console.log('App init: audio.ts import ffmpeg-static');
 import ffmpegStatic from 'ffmpeg-static';
 
-export const getAudiofileMetadata = async (audioFilePath: string): Promise<musicMetadata.IAudioMetadata> => {
+export const getAudiofileMetadata = async (audioFilePath: string): Promise<IAudioMetadata> => {
   try {
-    const metaData = await musicMetadata.parseFile(audioFilePath, { duration: true });
+    const metaData = await parseFile(audioFilePath, { duration: true });
     return metaData;
   } catch (err) {
     console.log('Audio Util (Duration): Failed to get audiofile duration.', audioFilePath);
@@ -19,7 +19,7 @@ export const getAudioFileDurationInSeconds = async (audioFilePath: string): Prom
   console.log('Audio Util (Duration): Get audiofile duration in seconds...');
 
   try {
-    const metaData = await musicMetadata.parseFile(audioFilePath, { duration: true });
+    const metaData = await parseFile(audioFilePath, { duration: true });
     const durationInSeconds = metaData.format.duration;
     console.log(`Audio Util (Duration): Got audiofile duration: ${durationInSeconds} seconds.`);
 
