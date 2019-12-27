@@ -1,5 +1,6 @@
 console.time('Startup Time');
 console.log('App init: Start!');
+require('@google-cloud/trace-agent').start();
 
 // tslint:disable-next-line
 const { version } = require('../package.json');
