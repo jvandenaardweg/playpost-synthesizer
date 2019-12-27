@@ -5,8 +5,11 @@ import bodyParser from 'body-parser';
 import express, { NextFunction, Request, Response } from 'express';
 
 import { Sentry } from './sentry';
+console.log('App init: Import synthesize controller...');
 import { SynthesizerController } from './controllers/synthesize-controller';
+console.log('App init: Import health controller...');
 import { HealthController } from './controllers/health-controller';
+console.log('App init: Import status controller...');
 import { StatusController } from './controllers/status-controller';
 
 export const setupServer = async () => {
