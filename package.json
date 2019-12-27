@@ -15,7 +15,7 @@
     "start:dev": "node -r dotenv/config dist/index.js",
     "test": "npm run lint && npm run jest && npm run typescript:check",
     "test:watch": "npm run jest:watch",
-    "jest": "NODE_ENV=test jest --silent --maxWorkers=4",
+    "jest": "NODE_ENV=test jest --silent --maxWorkers=4 --passWithNoTests",
     "jest:watch": "NODE_ENV=test jest --watch --silent --verbose --coverage",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "lint:fix": "tslint -c tslint.json 'src/**/*.ts' --fix",
