@@ -2,7 +2,7 @@ import { Storage, UploadOptions, File } from '@google-cloud/storage';
 
 export type AvailableBucketName = 'storage.playpost.app' | 'storage-development.playpost.app' | 'storage-staging.playpost.app';
 
-interface UploadResult {
+export interface UploadResult {
   fileMetaData: any;
   publicFileUrl: string;
 }

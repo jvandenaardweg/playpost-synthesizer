@@ -1,13 +1,13 @@
-import * as md5 from 'md5';
-import * as rimraf from 'rimraf';
-import * as fsExtra from 'fs-extra';
-import * as os from 'os';
-import * as musicMetadata from 'music-metadata';
+import md5 from 'md5';
+import rimraf from 'rimraf';
+import fsExtra from 'fs-extra';
+import os from 'os';
+import musicMetadata from 'music-metadata';
 import { getSSMLParts } from '../utils/ssml';
 import { getAudioFileDurationInSeconds, concatAudioFiles, getAudiofileMetadata } from '../utils/audio';
 import { AvailableBucketName, GoogleCloudStorage } from '../storage/google-cloud-storage';
 import { google } from '@google-cloud/text-to-speech/build/protos/protos';
-import * as AWS from 'aws-sdk';
+import AWS from 'aws-sdk';
 
 export interface SynthesizeOptionsGoogle {
   ssml: string;
@@ -68,7 +68,7 @@ export class BaseSynthesizer {
   }
 
   // string | Uint8Array | Buffer | Blob | internal.Readable | undefined
-  public saveTempFile = async (sessionId: string, index: number, audioContent: Uint8Array | null | undefined | Buffer | AWS.Polly.AudioStream): Promise<string> => {
+  public saveTempFile = async (sessionId: string, index: number, audioContent: Uint8Array | null | undefined | Buffer | any): Promise<string> => {
     const tempfile = `${this.tempBaseDir}/${sessionId}-${index}.${this.fileExtension}`;
 
     await fsExtra.ensureFile(tempfile);
