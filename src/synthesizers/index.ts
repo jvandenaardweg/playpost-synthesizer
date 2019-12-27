@@ -60,6 +60,10 @@ export class BaseSynthesizer {
     console.log('Synthesizer fileExtension:', this.fileExtension);
     console.log('Synthesizer characterLimitHard:', this.characterLimitHard);
     console.log('Synthesizer characterLimitSoft:', this.characterLimitSoft);
+
+    fs.mkdirSync(this.tempBaseDir);
+
+    console.log('Synthesizer created tempBaseDir:', this.tempBaseDir);
   }
 
   public getSSMLParts = (ssml: string) => {
