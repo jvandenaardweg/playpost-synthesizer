@@ -6,6 +6,8 @@ import express, { NextFunction, Request, Response } from 'express';
 
 import { Sentry } from './sentry';
 import { SynthesizerController } from './controllers/synthesize-controller';
+import { HealthController } from './controllers/health-controller';
+import { StatusController } from './controllers/status-controller';
 
 export const setupServer = async () => {
   console.log('App init:', 'Server setup...');
@@ -40,7 +42,9 @@ export const setupServer = async () => {
   app.use(Sentry.Handlers.requestHandler() as express.RequestHandler);
   app.use(Sentry.Handlers.errorHandler() as express.ErrorRequestHandler);
 
-  const synthesizerController = new SynthesizerController()
+  const synthesizerController = new SynthesizerController();
+  const healthController = new HealthController();
+  const statusController = new StatusController();
 
   // Make express allow JSON payload bodies
   // https://medium.com/@nodepractices/were-under-attack-23-node-js-security-best-practices-e33c146cb87d#cb8f
@@ -49,6 +53,8 @@ export const setupServer = async () => {
 
   app.post('/v1/synthesize/:synthesizerName', synthesizerController.synthesize);
 
+  app.get('/status', healthController.getAll);
+  app.get('/health', statusController.getAll);
 
   // Catch all
   // Should be the last route

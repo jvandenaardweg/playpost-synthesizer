@@ -7,6 +7,6 @@ steps:
   args: ['push', 'gcr.io/$PROJECT_ID/playpost-synthesizer']
   # Deploy container image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['beta', 'run', 'deploy', 'playpost-synthesizer', '--image', 'gcr.io/$PROJECT_ID/playpost-synthesizer', '--region', 'europe-west1','--platform', 'managed', '--quiet']
+  args: ['beta', 'run', 'deploy', 'playpost-synthesizer', '--image', 'gcr.io/$PROJECT_ID/playpost-synthesizer', '--region', 'europe-west1','--platform', 'managed', '--allow-unauthenticated', '--quiet']
 images:
 - gcr.io/$PROJECT_ID/playpost-synthesizer
