@@ -1,4 +1,6 @@
+console.log('App init: @google-cloud/storage');
 import { Storage, UploadOptions, File } from '@google-cloud/storage';
+console.log('App init: @google-cloud/storage DONE');
 
 export type AvailableBucketName = 'storage.playpost.app' | 'storage-development.playpost.app' | 'storage-staging.playpost.app';
 
