@@ -1,3 +1,4 @@
+console.log('App init: ssml.ts import polly-ssml-split');
 import pollySsmlSplit from 'polly-ssml-split';
 
 export const GOOGLE_CHARACTER_FINAL_LIMIT = 5000;

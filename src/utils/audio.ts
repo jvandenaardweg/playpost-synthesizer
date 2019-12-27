@@ -1,9 +1,9 @@
-// import ffmpeg from '@ffmpeg-installer/ffmpeg';
+console.log('App init: audio.ts import fluent-ffmpeg');
 import fluentFfmpeg from 'fluent-ffmpeg';
+console.log('App init: audio.ts import music-metadata');
 import * as musicMetadata from 'music-metadata';
+console.log('App init: audio.ts import ffmpeg-static');
 import ffmpegStatic from 'ffmpeg-static';
-
-fluentFfmpeg.setFfmpegPath(ffmpegStatic.path);
 
 export const getAudiofileMetadata = async (audioFilePath: string): Promise<musicMetadata.IAudioMetadata> => {
   try {
@@ -37,6 +37,8 @@ export const getAudioFileDurationInSeconds = async (audioFilePath: string): Prom
  */
 export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string): Promise<string> => {
   return new Promise((resolve, reject) => {
+    fluentFfmpeg.setFfmpegPath(ffmpegStatic.path);
+
     const hrstart = process.hrtime();
 
     console.log(`Audio Util (Concat): Combining ${audioFiles.length} audiofiles to one audio file...`);

@@ -1,22 +1,22 @@
-console.log('App init: import md5');
+console.log('App init: index.ts import md5');
 import md5 from 'md5';
-console.log('App init: import rimraf');
+console.log('App init: index.ts import rimraf');
 import rimraf from 'rimraf';
-console.log('App init: import fs-extra');
+console.log('App init: index.ts import fs-extra');
 import fsExtra from 'fs-extra';
-console.log('App init: import os');
+console.log('App init: index.ts import os');
 import os from 'os';
-console.log('App init: import music-metadata');
+console.log('App init: index.ts import music-metadata');
 import musicMetadata from 'music-metadata';
-console.log('App init: ../utils/ssml');
+console.log('App init: index.ts import ../utils/ssml');
 import { getSSMLParts } from '../utils/ssml';
-console.log('App init: import ../utils/audio');
+console.log('App init: index.ts import ../utils/audio');
 import { getAudioFileDurationInSeconds, concatAudioFiles, getAudiofileMetadata } from '../utils/audio';
-console.log('App init: import ../storage/google-cloud-storage');
+console.log('App init: index.ts import ../storage/google-cloud-storage');
 import { AvailableBucketName, GoogleCloudStorage } from '../storage/google-cloud-storage';
-console.log('App init: import @google-cloud/text-to-speech/build/protos/protos');
+console.log('App init: index.ts import @google-cloud/text-to-speech/build/protos/protos');
 import { google } from '@google-cloud/text-to-speech/build/protos/protos';
-console.log('App init: import aws-sdk');
+console.log('App init: index.ts import aws-sdk');
 import AWS from 'aws-sdk';
 
 export interface SynthesizeOptionsGoogle {

@@ -1,12 +1,12 @@
-console.log('App init: @google-cloud/text-to-speech');
+console.log('App init: google.ts @google-cloud/text-to-speech');
 import { v1 } from '@google-cloud/text-to-speech';
-console.log('App init: @google-cloud/text-to-speech/build/protos/protos');
+console.log('App init: google.ts @google-cloud/text-to-speech/build/protos/protos');
 import { google } from '@google-cloud/text-to-speech/build/protos/protos';
-console.log('App init: ../storage/google-cloud-storage');
+console.log('App init: google.ts ../storage/google-cloud-storage');
 import { AvailableBucketName } from '../storage/google-cloud-storage';
-console.log('App init: ./index');
+console.log('App init: google.ts ./index');
 import { BaseSynthesizer, SynthesizeOptionsGoogle, SynthesizeUploadResponse } from './index';
-console.log('App init: ../utils/ssml');
+console.log('App init: google.ts ../utils/ssml');
 import { GOOGLE_CHARACTER_HARD_LIMIT, GOOGLE_CHARACTER_SOFT_LIMIT } from '../utils/ssml';
 
 export class GoogleSynthesizer extends BaseSynthesizer {

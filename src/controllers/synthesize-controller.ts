@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { Sentry } from '../sentry';
 
-console.log('App init: import ../synthesizers/google');
+console.log('App init: synthesize-controller.ts ../synthesizers/google');
 import { GoogleSynthesizer } from '../synthesizers/google';
-console.log('App init: import ../synthesizers/aws');
+console.log('App init: synthesize-controller.ts ../synthesizers/aws');
 import { AWSSynthesizer } from '../synthesizers/aws';
-console.log('App init: import ../storage/google-cloud-storage');
+console.log('App init: synthesize-controller.ts ../storage/google-cloud-storage');
 import { AvailableBucketName } from '../storage/google-cloud-storage';
 
 interface RequestBody {
