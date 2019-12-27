@@ -3,12 +3,13 @@ import { Sentry } from '../sentry';
 
 console.log('App init: synthesize-controller.ts ../storage/google-cloud-storage');
 import { AvailableBucketName } from '../storage/google-cloud-storage';
+import { AllowedOutputFileExtension } from '../synthesizers';
 
 interface RequestBody {
   action: 'upload' | 'preview',
   synthesizerName: 'google' | 'aws',
   voiceSsmlGender: 'FEMALE' | 'MALE',
-  outputFormat: 'mp3' | 'wav';
+  outputFormat: AllowedOutputFileExtension;
   voiceName: string;
   voiceLanguageCode: string;
   ssml: string;

@@ -3,7 +3,7 @@ import { google } from '@google-cloud/text-to-speech/build/protos/protos';
 console.log('App init: google.ts ../storage/google-cloud-storage');
 import { AvailableBucketName } from '../storage/google-cloud-storage';
 console.log('App init: google.ts ./index');
-import { BaseSynthesizer, SynthesizeUploadResponse } from './index';
+import { BaseSynthesizer, SynthesizeUploadResponse, AllowedOutputFileExtension } from './index';
 console.log('App init: google.ts ../utils/ssml');
 import { GOOGLE_CHARACTER_HARD_LIMIT, GOOGLE_CHARACTER_SOFT_LIMIT } from '../utils/ssml';
 
@@ -18,14 +18,14 @@ export interface SynthesizeOptionsGoogle {
 export class GoogleSynthesizer extends BaseSynthesizer {
   private readonly client: any;
   private readonly options: SynthesizeOptionsGoogle;
-  private readonly outputFormat: 'mp3' | 'wav';
+  private readonly outputFormat: AllowedOutputFileExtension;
 
-  constructor(outputFormat: 'mp3' | 'wav', options: SynthesizeOptionsGoogle) {
-    super(
-      GOOGLE_CHARACTER_HARD_LIMIT,
-      GOOGLE_CHARACTER_SOFT_LIMIT,
-      outputFormat
-    );
+  constructor(outputFormat: AllowedOutputFileExtension, options: SynthesizeOptionsGoogle) {
+    super({
+      characterLimitHard: GOOGLE_CHARACTER_HARD_LIMIT,
+      characterLimitSoft: GOOGLE_CHARACTER_SOFT_LIMIT,
+      tempFilesExtension: outputFormat,
+    });
 
     const { TextToSpeechClient } = require('@google-cloud/text-to-speech');
 

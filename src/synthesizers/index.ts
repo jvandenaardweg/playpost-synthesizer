@@ -9,12 +9,12 @@ import { IAudioMetadata } from 'music-metadata';
 console.log('App init: index.ts import ../utils/ssml');
 import { getSSMLParts } from '../utils/ssml';
 console.log('App init: index.ts import ../utils/audio');
-import { getAudioFileDurationInSeconds, concatAudioFiles, getAudiofileMetadata } from '../utils/audio';
+import { concatAudioFiles, getAudiofileMetadata } from '../utils/audio';
 console.log('App init: index.ts import ../storage/google-cloud-storage');
 import { AvailableBucketName, GoogleCloudStorage } from '../storage/google-cloud-storage';
 
-export type AllowedInputFileExtensions = 'mp3' | 'wav' | 'pcm';
-export type AllowedOutputFileExtensions = 'mp3' | 'wav';
+export type AllowedTempFilesExtension = 'mp3' | 'wav' | 'pcm';
+export type AllowedOutputFileExtension = 'mp3' | 'wav';
 
 export interface SynthesizeUploadResponse {
   fileMetaData: any;
@@ -23,23 +23,29 @@ export interface SynthesizeUploadResponse {
   audiofileMetadata: IAudioMetadata
 }
 
+export interface SynthesizerBaseOptions {
+  characterLimitHard: number;
+  characterLimitSoft: number;
+  tempFilesExtension: AllowedTempFilesExtension;
+}
+
 export class BaseSynthesizer {
   readonly sessionId: string;
-  readonly fileExtension: AllowedInputFileExtensions;
+  readonly tempFilesExtension: AllowedTempFilesExtension;
   readonly tempBaseDir: string;
   readonly characterLimitSoft: number;
   readonly characterLimitHard: number;
 
-  constructor(characterLimitHard: number, characterLimitSoft: number, fileExtension: AllowedInputFileExtensions) {
+  constructor(options: SynthesizerBaseOptions) {
     this.sessionId = md5((new Date().getTime() * 10000).toString());
-    this.fileExtension = fileExtension;
+    this.tempFilesExtension = options.tempFilesExtension;
     this.tempBaseDir =`${os.tmpdir()}/${this.sessionId}`;
-    this.characterLimitHard = characterLimitHard;
-    this.characterLimitSoft = characterLimitSoft;
+    this.characterLimitHard = options.characterLimitHard;
+    this.characterLimitSoft = options.characterLimitSoft;
 
     console.log('Synthesizer sessionId:', this.sessionId);
     console.log('Synthesizer tempBaseDir:', this.tempBaseDir);
-    console.log('Synthesizer fileExtension:', this.fileExtension);
+    console.log('Synthesizer tempFilesExtension:', this.tempFilesExtension);
     console.log('Synthesizer characterLimitHard:', this.characterLimitHard);
     console.log('Synthesizer characterLimitSoft:', this.characterLimitSoft);
 
@@ -55,10 +61,6 @@ export class BaseSynthesizer {
     });
   }
 
-  public getAudioFileDurationInSeconds = (concatinatedAudiofilePath: string) => {
-    return getAudioFileDurationInSeconds(concatinatedAudiofilePath)
-  }
-
   public getAudiofileMetadata = (concatinatedAudiofilePath: string) => {
     return getAudiofileMetadata(concatinatedAudiofilePath)
   }
@@ -66,7 +68,7 @@ export class BaseSynthesizer {
   // string | Uint8Array | Buffer | Blob | internal.Readable | undefined
   public saveTempFile = async (sessionId: string, index: number, audioContent: Uint8Array | null | undefined | Buffer | any): Promise<string> => {
     return new Promise((resolve, reject) => {
-      const tempfile = `${this.tempBaseDir}/${sessionId}-${index}.${this.fileExtension}`;
+      const tempfile = `${this.tempBaseDir}/${sessionId}-${index}.${this.tempFilesExtension}`;
 
       fs.writeFile(tempfile, audioContent, 'binary', (err: any) => {
         if (err) {
@@ -89,7 +91,8 @@ export class BaseSynthesizer {
           reject(err);
         }
 
-        console.log('Cleaned up dir:', dir);
+        console.log('removeDir:', dir);
+
         resolve();
       });
     });
@@ -100,7 +103,7 @@ export class BaseSynthesizer {
     return googleCloudStorage.upload(concatinatedAudiofilePath, bucketUploadDestination)
   }
 
-  public getConcatinatedAudiofilePath = (tempFiles: string[], inputFormat: AllowedInputFileExtensions, outputFormat: AllowedOutputFileExtensions) => {
+  public getConcatinatedAudiofilePath = (tempFiles: string[], inputFormat: AllowedTempFilesExtension, outputFormat: AllowedOutputFileExtension) => {
     return concatAudioFiles(tempFiles, this.tempBaseDir, inputFormat, outputFormat);
   }
 }

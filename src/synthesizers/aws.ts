@@ -1,5 +1,5 @@
 console.log('App init: aws.ts ./index');
-import { BaseSynthesizer, SynthesizeUploadResponse } from './index';
+import { BaseSynthesizer, SynthesizeUploadResponse, AllowedOutputFileExtension } from './index';
 console.log('App init: aws.ts ../storage/google-cloud-storage');
 import { AvailableBucketName } from '../storage/google-cloud-storage';
 console.log('App init: aws.ts ../utils/ssml');
@@ -17,14 +17,14 @@ export interface SynthesizeOptionsAWS {
 export class AWSSynthesizer extends BaseSynthesizer {
   private readonly client: AWSPolly;
   private readonly options: SynthesizeOptionsAWS;
-  private readonly outputFormat: 'mp3' | 'wav';
+  private readonly outputFormat: AllowedOutputFileExtension;
 
-  constructor(outputFormat: 'mp3' | 'wav', options: SynthesizeOptionsAWS) {
-    super(
-      AWS_CHARACTER_HARD_LIMIT,
-      AWS_CHARACTER_SOFT_LIMIT,
-      outputFormat === 'wav' ? 'pcm' : 'mp3'
-    );
+  constructor(outputFormat: AllowedOutputFileExtension, options: SynthesizeOptionsAWS) {
+    super({
+      characterLimitHard: AWS_CHARACTER_HARD_LIMIT,
+      characterLimitSoft: AWS_CHARACTER_SOFT_LIMIT,
+      tempFilesExtension: outputFormat === 'wav' ? 'pcm' : 'mp3'
+    });
 
     // Required environment variables:
     // AWS_ACCESS_KEY_ID
@@ -101,9 +101,7 @@ export class AWSSynthesizer extends BaseSynthesizer {
       const tempFiles = await Promise.all(saveTempFiles);
       console.log('tempFiles: ', JSON.stringify(tempFiles));
 
-      // const inputFormat = this.fileExtension === 'wav' ? 'pcm' : 'mp3';
-
-      const concatinatedAudiofilePath = await this.getConcatinatedAudiofilePath(tempFiles, this.fileExtension, this.outputFormat);
+      const concatinatedAudiofilePath = await this.getConcatinatedAudiofilePath(tempFiles, this.tempFilesExtension, this.outputFormat);
       console.log('concatinatedAudiofilePath: ', concatinatedAudiofilePath);
 
       console.log('Uploading...');

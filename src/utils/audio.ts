@@ -4,6 +4,7 @@ console.log('App init: audio.ts import music-metadata');
 import { parseFile, IAudioMetadata } from 'music-metadata';
 console.log('App init: audio.ts import ffmpeg-static');
 import ffmpegStatic from 'ffmpeg-static';
+import { AllowedOutputFileExtension, AllowedTempFilesExtension } from '../synthesizers';
 
 export const getAudiofileMetadata = async (audioFilePath: string): Promise<IAudioMetadata> => {
   try {
@@ -15,27 +16,10 @@ export const getAudiofileMetadata = async (audioFilePath: string): Promise<IAudi
   }
 };
 
-export const getAudioFileDurationInSeconds = async (audioFilePath: string): Promise<number> => {
-  console.log('Audio Util (Duration): Get audiofile duration in seconds...');
-
-  try {
-    const metaData = await parseFile(audioFilePath, { duration: true });
-    const durationInSeconds = metaData.format.duration;
-    console.log(`Audio Util (Duration): Got audiofile duration: ${durationInSeconds} seconds.`);
-
-    // If duration is "undefined", we just return 0
-    return durationInSeconds || 0;
-  } catch (err) {
-    console.log('Audio Util (Duration): Failed to get audiofile duration.', audioFilePath);
-
-    throw err;
-  }
-};
-
 /**
  * Concatinates multiple audiofiles into 1 audiofile
  */
-export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string, inputFormat: 'mp3' | 'pcm' | 'wav', outputFormat: 'mp3' | 'wav'): Promise<string> => {
+export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string, inputFormat: AllowedTempFilesExtension, outputFormat: AllowedOutputFileExtension): Promise<string> => {
   return new Promise((resolve, reject) => {
     fluentFfmpeg.setFfmpegPath(ffmpegStatic.path);
 
