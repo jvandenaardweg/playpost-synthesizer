@@ -5,8 +5,7 @@ import bodyParser from 'body-parser';
 import express, { NextFunction, Request, Response } from 'express';
 
 import { Sentry } from './sentry';
-
-console.log('App init:', 'Starting...');
+import { SynthesizerController } from './controllers/synthesize-controller';
 
 export const setupServer = async () => {
   console.log('App init:', 'Server setup...');
@@ -41,12 +40,14 @@ export const setupServer = async () => {
   app.use(Sentry.Handlers.requestHandler() as express.RequestHandler);
   app.use(Sentry.Handlers.errorHandler() as express.ErrorRequestHandler);
 
+  const synthesizerController = new SynthesizerController()
+
   // Make express allow JSON payload bodies
   // https://medium.com/@nodepractices/were-under-attack-23-node-js-security-best-practices-e33c146cb87d#cb8f
   app.use(bodyParser.json()); // We upped the limit because an Apple receipt string is a bit large
   app.use(bodyParser.urlencoded({ extended: true }));
 
-  app.post('/v1/synthesize/:synthesizerName', () => {});
+  app.post('/v1/synthesize/:synthesizerName', synthesizerController.synthesize);
 
 
   // Catch all

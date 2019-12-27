@@ -1,10 +1,10 @@
+console.log('App init: Start!');
+
 // tslint:disable-next-line
 const { version } = require('../package.json');
 
 import { Sentry } from './sentry';
 import { setupServer } from './server';
-
-console.log('App init: Setting up...');
 
 console.log('App init:', 'Release version:', version);
 
@@ -17,6 +17,8 @@ async function bootstrap() {
   } catch (err) {
     console.error('Error during setup', err.message);
     return Sentry.captureException(err);
+  } finally {
+    console.log('App init: Complete!');
   }
 
 }
