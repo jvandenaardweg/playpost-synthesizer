@@ -1,5 +1,4 @@
 console.log('App init: google.ts @google-cloud/text-to-speech');
-import { v1 } from '@google-cloud/text-to-speech';
 console.log('App init: google.ts @google-cloud/text-to-speech/build/protos/protos');
 import { google } from '@google-cloud/text-to-speech/build/protos/protos';
 console.log('App init: google.ts ../storage/google-cloud-storage');
@@ -10,7 +9,7 @@ console.log('App init: google.ts ../utils/ssml');
 import { GOOGLE_CHARACTER_HARD_LIMIT, GOOGLE_CHARACTER_SOFT_LIMIT } from '../utils/ssml';
 
 export class GoogleSynthesizer extends BaseSynthesizer {
-  private readonly client: v1.TextToSpeechClient;
+  private readonly client: any;
   private readonly options: SynthesizeOptionsGoogle;
 
   constructor(options: SynthesizeOptionsGoogle) {
@@ -18,6 +17,8 @@ export class GoogleSynthesizer extends BaseSynthesizer {
       GOOGLE_CHARACTER_HARD_LIMIT,
       GOOGLE_CHARACTER_SOFT_LIMIT,
     );
+
+    const { v1 } = require('@google-cloud/text-to-speech');
 
     this.client = new v1.TextToSpeechClient();
     this.options = options;

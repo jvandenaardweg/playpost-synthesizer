@@ -1,5 +1,5 @@
 console.log('App init: google-cloud-storage.ts @google-cloud/storage');
-import { Storage, UploadOptions, File } from '@google-cloud/storage';
+import { UploadOptions, File } from '@google-cloud/storage';
 console.log('App init: google-cloud-storage.ts @google-cloud/storage DONE');
 
 export type AvailableBucketName = 'storage.playpost.app' | 'storage-development.playpost.app' | 'storage-staging.playpost.app';
@@ -10,10 +10,11 @@ export interface UploadResult {
 }
 
 export class GoogleCloudStorage {
-  private readonly storage: Storage;
+  private readonly storage: any;
   private readonly bucketName: AvailableBucketName;
 
   constructor (bucketName: AvailableBucketName) {
+    const { Storage } = require('@google-cloud/storage');
     this.storage = new Storage();
     this.bucketName = bucketName;
   }

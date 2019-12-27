@@ -1,5 +1,5 @@
 console.log('App init: aws.ts import aws-sdk');
-import AWS from 'aws-sdk';
+// import AWS from 'aws-sdk';
 console.log('App init: aws.ts ./index');
 import { BaseSynthesizer, SynthesizeOptionsAWS, SynthesizeUploadResponse } from './index';
 console.log('App init: aws.ts ../storage/google-cloud-storage');
@@ -21,7 +21,7 @@ export class AWSSynthesizer extends BaseSynthesizer {
     // AWS_ACCESS_KEY_ID
     // AWS_SECRET_ACCESS_KEY
     // AWS_USER
-
+    const AWS = require('aws-sdk');
     // Make sure the environment variables are set up in the function.
 
     AWS.config.update({ region: 'eu-west-1' });

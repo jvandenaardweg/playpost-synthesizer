@@ -1,5 +1,6 @@
 console.time('Startup Time');
 console.log('App init: Start!');
+require('cache-require-paths');
 require('@google-cloud/trace-agent').start();
 
 console.log('App init: Require package.json...');

@@ -2,8 +2,8 @@ console.log('App init: index.ts import md5');
 import md5 from 'md5';
 console.log('App init: index.ts import rimraf');
 import rimraf from 'rimraf';
-console.log('App init: index.ts import fs-extra');
-import fsExtra from 'fs-extra';
+console.log('App init: index.ts import fs');
+import fs from 'fs';
 console.log('App init: index.ts import os');
 import os from 'os';
 console.log('App init: index.ts import music-metadata');
@@ -17,7 +17,7 @@ import { AvailableBucketName, GoogleCloudStorage } from '../storage/google-cloud
 console.log('App init: index.ts import @google-cloud/text-to-speech/build/protos/protos');
 import { google } from '@google-cloud/text-to-speech/build/protos/protos';
 console.log('App init: index.ts import aws-sdk');
-import AWS from 'aws-sdk';
+import { Polly } from 'aws-sdk';
 
 export interface SynthesizeOptionsGoogle {
   ssml: string;
@@ -29,9 +29,9 @@ export interface SynthesizeOptionsGoogle {
 
 export interface SynthesizeOptionsAWS {
   ssml: string;
-  audioEncoding: AWS.Polly.SynthesizeSpeechInput['OutputFormat'];
-  voiceLanguageCode: AWS.Polly.SynthesizeSpeechInput['LanguageCode'];
-  voiceName: AWS.Polly.SynthesizeSpeechInput['VoiceId'];
+  audioEncoding: Polly.SynthesizeSpeechInput['OutputFormat'];
+  voiceLanguageCode: Polly.SynthesizeSpeechInput['LanguageCode'];
+  voiceName: Polly.SynthesizeSpeechInput['VoiceId'];
 }
 
 export interface SynthesizeUploadResponse {
@@ -79,14 +79,19 @@ export class BaseSynthesizer {
 
   // string | Uint8Array | Buffer | Blob | internal.Readable | undefined
   public saveTempFile = async (sessionId: string, index: number, audioContent: Uint8Array | null | undefined | Buffer | any): Promise<string> => {
-    const tempfile = `${this.tempBaseDir}/${sessionId}-${index}.${this.fileExtension}`;
+    return new Promise((resolve, reject) => {
+      const tempfile = `${this.tempBaseDir}/${sessionId}-${index}.${this.fileExtension}`;
 
-    await fsExtra.ensureFile(tempfile);
-    await fsExtra.writeFile(tempfile, audioContent, 'binary');
+      fs.writeFile(tempfile, audioContent, 'binary', (err: any) => {
+        if (err) {
+          reject(err);
+        }
 
-    console.log('saveTempFile:', tempfile);
+        console.log('saveTempFile:', tempfile);
 
-    return tempfile;
+        resolve(tempfile)
+      });
+    })
   }
 
   public removeDir = (dir: string) => {
