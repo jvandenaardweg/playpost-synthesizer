@@ -22,6 +22,7 @@
     "upgrade-interactive": "npm-check --update",
     "tsc:watch": "tsc -p ./ --noEmit -w",
     "typescript:check": "tsc -p ./ --noEmit",
+    "preversion": "npm test",
     "version": "auto-changelog -p && git add CHANGELOG.md",
     "postversion": "git push && git push --tags --no-verify",
     "testrunner": "ts-node-dev ./tests/e2e/runner.ts"
