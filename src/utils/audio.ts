@@ -1,6 +1,6 @@
 // import ffmpeg from '@ffmpeg-installer/ffmpeg';
 import fluentFfmpeg from 'fluent-ffmpeg';
-import musicMetadata from 'music-metadata';
+import * as musicMetadata from 'music-metadata';
 import ffmpegStatic from 'ffmpeg-static';
 
 fluentFfmpeg.setFfmpegPath(ffmpegStatic.path);
