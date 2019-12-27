@@ -18,18 +18,20 @@ export interface SynthesizeOptionsGoogle {
 export class GoogleSynthesizer extends BaseSynthesizer {
   private readonly client: any;
   private readonly options: SynthesizeOptionsGoogle;
+  private readonly outputFormat: 'mp3' | 'wav';
 
-  constructor(fileExtension: 'mp3' | 'wav', options: SynthesizeOptionsGoogle) {
+  constructor(outputFormat: 'mp3' | 'wav', options: SynthesizeOptionsGoogle) {
     super(
       GOOGLE_CHARACTER_HARD_LIMIT,
       GOOGLE_CHARACTER_SOFT_LIMIT,
-      fileExtension
+      outputFormat
     );
 
     const { TextToSpeechClient } = require('@google-cloud/text-to-speech');
 
     this.client = new TextToSpeechClient();
     this.options = options;
+    this.outputFormat = outputFormat;
 
     console.log('Synthesizer options:', JSON.stringify(this.options));
   }
@@ -97,7 +99,7 @@ export class GoogleSynthesizer extends BaseSynthesizer {
       const tempFiles = await Promise.all(saveTempFiles);
       console.log('tempFiles: ', JSON.stringify(tempFiles));
 
-      const concatinatedAudiofilePath = await this.getConcatinatedAudiofilePath(tempFiles);
+      const concatinatedAudiofilePath = await this.getConcatinatedAudiofilePath(tempFiles, this.fileExtension, this.outputFormat);
       console.log('concatinatedAudiofilePath: ', concatinatedAudiofilePath);
 
       console.log('Uploading...');

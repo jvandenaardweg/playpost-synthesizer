@@ -10,3 +10,4 @@ typings/
 node_modules/
 
 .env
+.google-service-account-credentials.json

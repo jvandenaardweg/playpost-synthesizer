@@ -57,6 +57,9 @@ export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string
       // pcm to wav:
       // ffmpeg -f s16le -ar 16k -ac 1 -i "concat:file-0.pcm|file-1.pcm" output.wav
 
+      // PCM format is used by AWS Polly. More on that here:
+      // https://docs.aws.amazon.com/polly/latest/dg/API_SynthesizeSpeech.html#polly-SynthesizeSpeech-request-OutputFormat
+
       // audioCodec = 'pcm_s16le';
       ffmpegInputOptions.push('-f s16le');
       ffmpegInputOptions.push('-ar 16k');
