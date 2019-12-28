@@ -54,7 +54,9 @@ export const setupServer = async () => {
 
   app.use(express.json());
 
-  app.post('/v1/synthesize/:synthesizerName/:action', synthesizerController.synthesize);
+  app.get('/v1/synthesize/:synthesizerName/voices', [synthesizerController.authorize, synthesizerController.validateSynthesizerName], synthesizerController.getAllVoices);
+  app.post('/v1/synthesize/:synthesizerName/:action', [synthesizerController.authorize, synthesizerController.validateSynthesizerName], synthesizerController.postSynthesize);
+
 
   app.get('/status', healthController.getAll);
   app.get('/health', statusController.getAll);

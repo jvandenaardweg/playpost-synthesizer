@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Sentry } from '../sentry';
 
 console.log('App init: synthesize-controller.ts ../storage/google-cloud-storage');
@@ -21,12 +21,8 @@ interface RequestParams {
 }
 
 export class SynthesizerController {
-  public synthesize = async (req: Request, res: Response) => {
+  public authorize = (req: Request, res: Response, next: NextFunction) => {
     const authorization = req.header('Authorization');
-    const { synthesizerName, action } = req.params as unknown as RequestParams;
-    const { voiceSsmlGender, voiceName, voiceLanguageCode, ssml, bucketName, bucketUploadDestination, outputFormat } = req.body as RequestBody;
-
-    console.log('req.body', JSON.stringify(req.body));
 
     if (!authorization) {
       const message = 'No access.';
@@ -40,11 +36,28 @@ export class SynthesizerController {
       return res.status(403).json({ message });
     }
 
+    next();
+    return;
+  }
+
+  public validateSynthesizerName = (req: Request, res: Response, next: NextFunction) => {
+    const { synthesizerName } = req.params as unknown as RequestParams;
+
     if (!['google', 'aws'].includes(synthesizerName)) {
       const message = '"synthesizerName" must be "google" or "aws".';
       Sentry.captureMessage(message, Sentry.Severity.Log);
       return res.status(400).json({ message });
     }
+
+    next();
+    return;
+  }
+
+  public postSynthesize = async (req: Request, res: Response) => {
+    const { synthesizerName, action } = req.params as unknown as RequestParams;
+    const { voiceSsmlGender, voiceName, voiceLanguageCode, ssml, bucketName, bucketUploadDestination, outputFormat } = req.body as RequestBody;
+
+    console.log('req.body', JSON.stringify(req.body));
 
     if (!['mp3', 'wav'].includes(outputFormat)) {
       const message = '"outputFormat" must be "mp3" or "wav".';
@@ -86,6 +99,7 @@ export class SynthesizerController {
 
     // Create the correct synthesizer class with the correct options
     if (synthesizerName === 'google') {
+      // Require the synthesizer here to improve startup time
       const { GoogleSynthesizer } = require('../synthesizers/google');
 
       const audioEncoding = outputFormat === 'wav' ? 1 : 2; // 2 = MP3, 1 = LINEAR16
@@ -101,6 +115,7 @@ export class SynthesizerController {
         }
       );
     } else {
+      // Require the synthesizer here to improve startup time
       const { AWSSynthesizer } = require('../synthesizers/aws');
 
       const audioEncoding = outputFormat === 'wav' ? 'pcm' : 'mp3';
@@ -156,7 +171,49 @@ export class SynthesizerController {
     }
 
     // We should not end up here
-    const errorMessage = 'Invalid request.';
+    const errorMessage = 'Invalid synthesize request.';
+    Sentry.captureMessage(errorMessage, Sentry.Severity.Critical);
+    return res.status(400).json({ message: errorMessage });
+  }
+
+  /**
+   * Get's all available voices from the synthesizer and returns it.
+   */
+  public getAllVoices = async (req: Request, res: Response) => {
+    const { synthesizerName } = req.params as unknown as RequestParams;
+
+    if (synthesizerName === 'google') {
+      const { GoogleSynthesizer } = require('../synthesizers/google');
+      const googleSynthesizer = new GoogleSynthesizer();
+
+      try {
+        const voices = await googleSynthesizer.getAllVoices();
+        return res.json(voices);
+      } catch (err) {
+        Sentry.captureException(err);
+        return res.status(500).json({
+          message: err && err.message || 'Unknown error while getting the voices of this synthesizer.'
+        })
+      }
+    }
+
+    if (synthesizerName === 'aws') {
+      const { AWSSynthesizer } = require('../synthesizers/aws');
+      const awsSynthesizer = new AWSSynthesizer();
+
+      try {
+        const voices = await awsSynthesizer.getAllVoices();
+        return res.json(voices);
+      } catch (err) {
+        Sentry.captureException(err);
+        return res.status(500).json({
+          message: err && err.message || 'Unknown error while getting the voices of this synthesizer.'
+        })
+      }
+    }
+
+    // We should not end up here
+    const errorMessage = 'Invalid get all voices request.';
     Sentry.captureMessage(errorMessage, Sentry.Severity.Critical);
     return res.status(400).json({ message: errorMessage });
   }

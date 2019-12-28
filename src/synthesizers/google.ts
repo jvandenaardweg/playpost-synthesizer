@@ -6,6 +6,7 @@ console.log('App init: google.ts ./index');
 import { BaseSynthesizer, SynthesizeUploadResponse, AllowedOutputFileExtension } from './index';
 console.log('App init: google.ts ../utils/ssml');
 import { GOOGLE_CHARACTER_HARD_LIMIT, GOOGLE_CHARACTER_SOFT_LIMIT } from '../utils/ssml';
+import { v1 } from '@google-cloud/text-to-speech';
 
 export interface SynthesizeOptionsGoogle {
   ssml: string;
@@ -16,7 +17,7 @@ export interface SynthesizeOptionsGoogle {
 }
 
 export class GoogleSynthesizer extends BaseSynthesizer {
-  private readonly client: any;
+  private readonly client: v1.TextToSpeechClient;
   private readonly options: SynthesizeOptionsGoogle;
   private readonly outputFormat: AllowedOutputFileExtension;
 
@@ -27,15 +28,17 @@ export class GoogleSynthesizer extends BaseSynthesizer {
       tempFilesExtension: outputFormat,
     });
 
-    // Require the Text to Speech client here, and not on top of the file to improve startup performance...
-    // ... on requests that do not need Google Text to Speech
-    const { TextToSpeechClient } = require('@google-cloud/text-to-speech');
-
-    this.client = new TextToSpeechClient();
+    this.client = new v1.TextToSpeechClient();
     this.options = options;
     this.outputFormat = outputFormat;
 
     console.log('Synthesizer options:', JSON.stringify(this.options));
+  }
+
+  public getAllVoices = async () => {
+    const result = await this.client.listVoices({});
+    const voices = result[0]['voices'];
+    return voices;
   }
 
   public synthesize = async (optionsWithSsmlPart: SynthesizeOptionsGoogle): Promise<google.cloud.texttospeech.v1.ISynthesizeSpeechResponse> => {

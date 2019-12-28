@@ -42,6 +42,21 @@ export class AWSSynthesizer extends BaseSynthesizer {
     console.log('Synthesizer options:', JSON.stringify(this.options));
   }
 
+  public getAllVoices = async (): Promise<AWSPolly.VoiceList> => {
+    return new Promise((resolve, reject) => {
+
+      this.client.describeVoices((err, data) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve(data.Voices);
+        return;
+      });
+    });
+  }
+
   public synthesize = async (options: SynthesizeOptionsAWS): Promise<AWSPolly.SynthesizeSpeechOutput> => {
     return new Promise((resolve, reject) => {
       const speechRequestOptions: AWSPolly.SynthesizeSpeechInput = {
