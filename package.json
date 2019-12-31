@@ -44,6 +44,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "get-audio-duration": "^1.0.0",
     "md5": "^2.2.1",
+    "node-fetch": "^2.6.0",
     "polly-ssml-split": "^0.1.0"
   },
   "devDependencies": {
@@ -53,6 +54,7 @@
     "@types/fs-extra": "^8.0.1",
     "@types/md5": "^2.1.33",
     "@types/node": "^13.1.1",
+    "@types/node-fetch": "^2.5.4",
     "@types/rimraf": "^2.0.3",
     "auto-changelog": "^1.16.2",
     "dotenv": "^8.2.0",

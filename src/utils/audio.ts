@@ -26,6 +26,8 @@ export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string
       // Adding this makes concatinating go way faster
       // Without this options, a concatination of 300ms took 10 seconds
       ffmpegOutputOptions.push('-acodec copy');
+      // ffmpegOutputOptions.push('-codec:a libmp3lame');
+      // ffmpegOutputOptions.push('-b:a 48k'); // https://trac.ffmpeg.org/wiki/Encode/MP3
     }
 
     if (inputFormat === 'pcm') {
