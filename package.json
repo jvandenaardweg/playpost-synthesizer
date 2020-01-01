@@ -45,7 +45,7 @@
     "get-audio-duration": "^1.0.0",
     "md5": "^2.2.1",
     "node-fetch": "^2.6.0",
-    "polly-ssml-split": "^0.1.0"
+    "ssml-split": "^0.1.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.2",

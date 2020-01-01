@@ -1,1 +1,1 @@
-declare module 'polly-ssml-split';
+declare module 'ssml-split';

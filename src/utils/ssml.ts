@@ -1,8 +1,7 @@
-console.log('App init: ssml.ts import polly-ssml-split');
-import pollySsmlSplit from 'polly-ssml-split';
+console.log('App init: ssml.ts import ssml-split');
+import ssmlSplit from 'ssml-split';
 
-export const GOOGLE_CHARACTER_FINAL_LIMIT = 5000;
-export const GOOGLE_CHARACTER_HARD_LIMIT = 4500; // just below google's api limit of 5000
+export const GOOGLE_CHARACTER_HARD_LIMIT = 5000;
 export const GOOGLE_CHARACTER_SOFT_LIMIT = 3000;
 
 export const AWS_CHARACTER_HARD_LIMIT = 3000;
@@ -11,13 +10,14 @@ export const AWS_CHARACTER_SOFT_LIMIT = 1500;
 export const MICROSOFT_CHARACTER_HARD_LIMIT = 1000; // 1024, but we take it safe
 export const MICROSOFT_CHARACTER_SOFT_LIMIT = 500;
 
-export const DEFAULT_SSML_SPLIT_HARD_LIMIT = 4800;
-export const DEFAULT_SSML_SPLIT_SOFT_LIMIT = 3000;
+export const DEFAULT_SSML_SPLIT_HARD_LIMIT = AWS_CHARACTER_HARD_LIMIT;
+export const DEFAULT_SSML_SPLIT_SOFT_LIMIT = AWS_CHARACTER_SOFT_LIMIT;
 
 interface ISsmlSplitOptions {
   softLimit?: number;
   hardLimit: number;
   extraSplitChars?: string;
+  includeSSMLTagsInCounter?: boolean;
 }
 
 export const getSSMLParts = (ssml: string, optionsOverwrite?: ISsmlSplitOptions) => {
@@ -26,7 +26,7 @@ export const getSSMLParts = (ssml: string, optionsOverwrite?: ISsmlSplitOptions)
   const defaultOptions: ISsmlSplitOptions = {
     hardLimit: DEFAULT_SSML_SPLIT_HARD_LIMIT, // MAX length of a single batch of split text
     softLimit: DEFAULT_SSML_SPLIT_SOFT_LIMIT, // MIN length of a single batch of split text
-    // extraSplitChars: '.', // Set of extra split characters (Optional property)
+    includeSSMLTagsInCounter: true
   };
 
   let options = defaultOptions;
@@ -35,11 +35,11 @@ export const getSSMLParts = (ssml: string, optionsOverwrite?: ISsmlSplitOptions)
     options = { ...defaultOptions, ...optionsOverwrite };
   }
 
-  pollySsmlSplit.configure(options);
+  ssmlSplit.configure(options);
 
   console.log(loggerPrefix, 'Splitting SSML content into different parts using options: ', JSON.stringify(options));
 
-  const ssmlParts: string[] = pollySsmlSplit.split(ssml);
+  const ssmlParts: string[] = ssmlSplit.split(ssml);
 
   if (!ssmlParts || !ssmlParts.length) {
     const errorMessage = 'Got no SSML parts.';
