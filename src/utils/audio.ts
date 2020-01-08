@@ -1,15 +1,16 @@
 console.log('App init: audio.ts import fluent-ffmpeg');
 import fluentFfmpeg from 'fluent-ffmpeg';
 console.log('App init: audio.ts import ffmpeg-static');
-import ffmpegStatic from 'ffmpeg-static';
+import ffmpegStaticPath from 'ffmpeg-static';
 import { AllowedOutputFileExtension, AllowedTempFilesExtension } from '../synthesizers';
+console.log('App init: audio.ts import ../synthesizers');
 
 /**
  * Concatinates multiple audiofiles into 1 audiofile
  */
 export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string, inputFormat: AllowedTempFilesExtension, outputFormat: AllowedOutputFileExtension): Promise<string> => {
   return new Promise((resolve, reject) => {
-    fluentFfmpeg.setFfmpegPath(ffmpegStatic.path);
+    fluentFfmpeg.setFfmpegPath(ffmpegStaticPath);
 
     const hrstart = process.hrtime();
 
