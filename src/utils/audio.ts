@@ -10,13 +10,14 @@ console.log('App init: audio.ts import ../synthesizers');
  */
 export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string, inputFormat: AllowedTempFilesExtension, outputFormat: AllowedOutputFileExtension): Promise<string> => {
   return new Promise((resolve, reject) => {
-    fluentFfmpeg.setFfmpegPath(ffmpegStaticPath);
+    const loggerPrefix = 'Audio Util (Concat):';
 
     const hrstart = process.hrtime();
+    console.log(loggerPrefix, 'Using ffmpeg path: ', ffmpegStaticPath);
+    fluentFfmpeg.setFfmpegPath(ffmpegStaticPath);
 
-    console.log(`Audio Util (Concat):`, audioFiles, tempBaseDir, inputFormat, outputFormat);
-    console.log(`Audio Util (Concat): Combining ${audioFiles.length} audiofiles to one audio file...`);
-
+    console.log(loggerPrefix, ``, audioFiles, tempBaseDir, inputFormat, outputFormat);
+    console.log(loggerPrefix, `Combining ${audioFiles.length} audiofiles to one audio file...`);
 
     const ffmpegInputOptions: string[] = [];
     const ffmpegOutputOptions: string[] = [];
@@ -46,7 +47,7 @@ export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string
 
     if (!audioFiles.length) {
       const errorMessage = 'No audiofiles given to concat.';
-      console.error('Audio Util (Concat): ', JSON.stringify(errorMessage));
+      console.error(loggerPrefix, JSON.stringify(errorMessage));
       reject(new Error(errorMessage));
     }
 
@@ -58,7 +59,7 @@ export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string
       save: outputPath
     }
 
-    console.log('Run fluent ffmpeg with: ', JSON.stringify(ffmpegOptions));
+    console.log(loggerPrefix, 'Run fluent ffmpeg with: ', JSON.stringify(ffmpegOptions));
 
     return fluentFfmpeg()
       .input(ffmpegOptions.input)
@@ -67,19 +68,19 @@ export const concatAudioFiles = async (audioFiles: string[], tempBaseDir: string
       .addOutputOptions(ffmpegOptions.outputOptions)
       .save(ffmpegOptions.save)
       .on('error', err => {
-        console.error('Audio Util (Concat): Concat failed using ffmpeg:', JSON.stringify(err));
+        console.error(loggerPrefix, 'Audio Util (Concat): Concat failed using ffmpeg:', JSON.stringify(err));
         reject(err);
       })
       .on('end', () => {
         const hrend = process.hrtime(hrstart);
         const ds = hrend[0];
         const dms = hrend[1] / 1000000;
-        console.log('Audio Util (Concat): Concat success!');
-        console.log(`Audio Util (Concat): Execution time: ${ds} ${dms}ms`);
+        console.log(loggerPrefix, 'Concat success!');
+        console.log(loggerPrefix, `Execution time: ${ds} ${dms}ms`);
         resolve(outputPath);
       })
       .on('codecData', data => {
-        console.log('Audio Util (Concat): Data:', JSON.stringify(data));
+        console.log(loggerPrefix, 'Data:', JSON.stringify(data));
       });
   });
 };
