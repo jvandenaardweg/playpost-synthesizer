@@ -11,6 +11,9 @@ COPY package.json package*.json ./
 # Install the NPM deps
 RUN npm install
 
+# Install ffmpeg, which is not included in node "slim"
+RUN apt-get install ffmpeg
+
 # Copy local code to the container image.
 COPY . ./
 
