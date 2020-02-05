@@ -1,32 +1,22 @@
 console.log('App init: ssml.ts import ssml-split');
-import ssmlSplit from 'ssml-split';
+import SSMLSplit, { OptionsInput } from 'ssml-split';
 
 export const GOOGLE_CHARACTER_HARD_LIMIT = 5000;
-export const GOOGLE_CHARACTER_SOFT_LIMIT = 3000;
+export const GOOGLE_CHARACTER_SOFT_LIMIT = 4000;
 
 export const AWS_CHARACTER_HARD_LIMIT = 3000;
-export const AWS_CHARACTER_SOFT_LIMIT = 1500;
-
-export const MICROSOFT_CHARACTER_HARD_LIMIT = 1000; // 1024, but we take it safe
-export const MICROSOFT_CHARACTER_SOFT_LIMIT = 500;
+export const AWS_CHARACTER_SOFT_LIMIT = 2000;
 
 export const DEFAULT_SSML_SPLIT_HARD_LIMIT = AWS_CHARACTER_HARD_LIMIT;
 export const DEFAULT_SSML_SPLIT_SOFT_LIMIT = AWS_CHARACTER_SOFT_LIMIT;
 
-interface ISsmlSplitOptions {
-  softLimit?: number;
-  hardLimit: number;
-  extraSplitChars?: string;
-  includeSSMLTagsInCounter?: boolean;
-}
-
-export const getSSMLParts = (ssml: string, optionsOverwrite?: ISsmlSplitOptions) => {
+export const getSSMLParts = (ssml: string, optionsOverwrite?: OptionsInput) => {
   const loggerPrefix = 'SSML (Util):';
 
-  const defaultOptions: ISsmlSplitOptions = {
+  const defaultOptions: OptionsInput = {
     hardLimit: DEFAULT_SSML_SPLIT_HARD_LIMIT, // MAX length of a single batch of split text
     softLimit: DEFAULT_SSML_SPLIT_SOFT_LIMIT, // MIN length of a single batch of split text
-    includeSSMLTagsInCounter: true
+    synthesizer: 'aws',
   };
 
   let options = defaultOptions;
@@ -35,7 +25,7 @@ export const getSSMLParts = (ssml: string, optionsOverwrite?: ISsmlSplitOptions)
     options = { ...defaultOptions, ...optionsOverwrite };
   }
 
-  ssmlSplit.configure(options);
+  const ssmlSplit = new SSMLSplit(options);
 
   console.log(loggerPrefix, 'Splitting SSML content into different parts using options: ', JSON.stringify(options));
 
