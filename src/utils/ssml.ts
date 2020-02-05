@@ -17,6 +17,7 @@ export const getSSMLParts = (ssml: string, optionsOverwrite?: OptionsInput) => {
     hardLimit: DEFAULT_SSML_SPLIT_HARD_LIMIT, // MAX length of a single batch of split text
     softLimit: DEFAULT_SSML_SPLIT_SOFT_LIMIT, // MIN length of a single batch of split text
     synthesizer: 'aws',
+    breakParagraphsAboveHardLimit: true
   };
 
   let options = defaultOptions;
