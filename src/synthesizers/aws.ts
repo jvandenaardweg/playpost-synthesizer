@@ -91,7 +91,7 @@ export class AWSSynthesizer extends BaseSynthesizer {
 
   public upload = async (bucketName: AvailableBucketName, bucketUploadDestination: string): Promise<SynthesizeUploadResponse> => {
     try {
-      const ssmlParts = this.getSSMLParts(this.options.ssml);
+      const ssmlParts = this.getSSMLParts(this.options.ssml, 'aws');
       console.log('ssmlParts: ', ssmlParts.length, JSON.stringify(ssmlParts));
 
       console.log('bucketUploadDestination: ', bucketUploadDestination);

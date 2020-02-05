@@ -51,10 +51,11 @@ export class BaseSynthesizer {
     console.log('Synthesizer created tempBaseDir:', this.tempBaseDir);
   }
 
-  public getSSMLParts = (ssml: string) => {
+  public getSSMLParts = (ssml: string, synthesizer: 'google' | 'aws') => {
     return getSSMLParts(ssml, {
       hardLimit: this.characterLimitHard,
-      softLimit: this.characterLimitSoft
+      softLimit: this.characterLimitSoft,
+      synthesizer
     });
   }
 
