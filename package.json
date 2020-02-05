@@ -51,7 +51,7 @@
     "@types/fluent-ffmpeg": "^2.1.14",
     "@types/fs-extra": "^8.0.1",
     "@types/md5": "^2.1.33",
-    "@types/node": "^13.1.1",
+    "@types/node": "^13.7.0",
     "@types/node-fetch": "^2.5.4",
     "@types/rimraf": "^2.0.3",
     "auto-changelog": "^1.16.2",
