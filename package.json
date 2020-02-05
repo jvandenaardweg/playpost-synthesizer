@@ -39,7 +39,7 @@
     "@sentry/node": "^5.12.3",
     "aws-sdk": "^2.611.0",
     "express": "^4.17.1",
-    "ffmpeg-static": "^3.0.0",
+    "ffmpeg-static": "^4.0.1",
     "fluent-ffmpeg": "^2.1.2",
     "get-audio-duration": "^1.0.0",
     "md5": "^2.2.1",
